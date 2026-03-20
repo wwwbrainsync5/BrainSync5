@@ -1,0 +1,2242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Brain Sync 5 — Learn Smart, Live Better</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <!-- PDF.js for built-in PDF viewing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <style>
+    /* ============================================================
+       CSS VARIABLES — Change these to restyle the whole app
+    ============================================================ */
+    :root {
+      --bg: #f5f7ff;
+      --surface: #ffffff;
+      --surface2: #eef1fb;
+      --border: #dde3f4;
+      --text: #0f1a3e;
+      --text-muted: #6b7a9e;
+      --primary: #2563eb;
+      --primary-light: #eff4ff;
+      --primary-dark: #1d4ed8;
+      --green: #10b981;
+      --green-light: #ecfdf5;
+      --amber: #f59e0b;
+      --amber-light: #fffbeb;
+      --red: #ef4444;
+      --red-light: #fef2f2;
+      --purple: #7c3aed;
+      --purple-light: #f5f3ff;
+      --radius: 14px;
+      --radius-sm: 8px;
+      --shadow: 0 2px 12px rgba(15,26,62,0.08);
+      --shadow-lg: 0 8px 32px rgba(15,26,62,0.13);
+      --transition: 0.2s ease;
+      --font: 'Sora', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+
+    /* Dark Mode */
+    [data-theme="dark"] {
+      --bg: #0d1117;
+      --surface: #161b27;
+      --surface2: #1e2536;
+      --border: #2a3350;
+      --text: #e8edff;
+      --text-muted: #8892b0;
+      --primary-light: #1a2540;
+      --green-light: #0a2a1e;
+      --amber-light: #2a1f05;
+      --red-light: #2a0f0f;
+      --purple-light: #1e1340;
+      --shadow: 0 2px 12px rgba(0,0,0,0.3);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.6;
+      transition: background var(--transition), color var(--transition);
+    }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; font-family: var(--font-body); }
+    img { max-width: 100%; display: block; }
+    h1, h2, h3, h4 { font-family: var(--font); line-height: 1.25; }
+
+    /* ============================================================
+       LAYOUT UTILITIES
+    ============================================================ */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+    .flex { display: flex; }
+    .flex-col { flex-direction: column; }
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+    .gap-2 { gap: 8px; }
+    .gap-3 { gap: 12px; }
+    .gap-4 { gap: 16px; }
+    .gap-6 { gap: 24px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .grid-auto { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+    @media (max-width: 768px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 500px) {
+      .grid-auto { grid-template-columns: 1fr; }
+    }
+
+    /* ============================================================
+       PAGES — show/hide system
+    ============================================================ */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ============================================================
+       NAVBAR
+    ============================================================ */
+    .navbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow);
+    }
+    .navbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      padding: 0 20px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font);
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: var(--primary);
+      cursor: pointer;
+    }
+    .logo-icon {
+      width: 34px; height: 34px;
+      background: var(--primary);
+      border-radius: 9px;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 1.1rem;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      list-style: none;
+    }
+    .nav-links a {
+      padding: 7px 13px;
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: all var(--transition);
+    }
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--primary);
+      background: var(--primary-light);
+    }
+    .nav-actions { display: flex; align-items: center; gap: 10px; }
+    .btn-icon {
+      width: 36px; height: 36px;
+      border: none;
+      background: var(--surface2);
+      border-radius: var(--radius-sm);
+      display: grid; place-items: center;
+      font-size: 1.1rem;
+      transition: background var(--transition);
+    }
+    .btn-icon:hover { background: var(--border); }
+    .btn {
+      padding: 8px 18px;
+      border-radius: var(--radius-sm);
+      border: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: all var(--transition);
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+    .btn-outline {
+      background: transparent;
+      color: var(--primary);
+      border: 1.5px solid var(--primary);
+    }
+    .btn-outline:hover { background: var(--primary-light); }
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      padding: 5px;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px; height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: all var(--transition);
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+    }
+
+    /* Mobile nav */
+    .mobile-nav {
+      display: none;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+    }
+    .mobile-nav.open { display: block; }
+    .mobile-nav a {
+      display: block;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      font-weight: 500;
+      transition: all var(--transition);
+    }
+    .mobile-nav a:hover { color: var(--primary); background: var(--primary-light); }
+
+    /* ============================================================
+       HERO SECTION
+    ============================================================ */
+    .hero {
+      padding: 70px 20px 60px;
+      text-align: center;
+      background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 320px; height: 320px;
+      background: radial-gradient(circle, rgba(37,99,235,0.08) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 5px 14px;
+      border-radius: 99px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 18px;
+      border: 1px solid rgba(37,99,235,0.2);
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+    .hero h1 span { color: var(--primary); }
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 520px;
+      margin: 0 auto 28px;
+    }
+    .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-lg { padding: 12px 28px; font-size: 0.95rem; border-radius: 10px; }
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 48px;
+      flex-wrap: wrap;
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat .num {
+      font-family: var(--font);
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .hero-stat .label { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* ============================================================
+       CARDS
+    ============================================================ */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      transition: all var(--transition);
+      overflow: hidden;
+    }
+    .card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+    .card-body { padding: 20px; }
+
+    /* ============================================================
+       SUBJECT CARDS
+    ============================================================ */
+    .subject-card {
+      cursor: pointer;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1.5px solid transparent;
+      transition: all var(--transition);
+      background: var(--surface);
+    }
+    .subject-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+    .subject-header {
+      padding: 24px 20px 16px;
+      position: relative;
+    }
+    .subject-icon {
+      width: 50px; height: 50px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-size: 1.6rem;
+      margin-bottom: 14px;
+    }
+    .subject-card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .subject-card p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .subject-footer {
+      padding: 12px 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      background: var(--surface2);
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 99px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    /* ============================================================
+       LESSON CARDS
+    ============================================================ */
+    .lesson-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      cursor: pointer;
+      transition: all var(--transition);
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .lesson-card:hover {
+      border-color: var(--primary);
+      box-shadow: var(--shadow-lg);
+      transform: translateX(3px);
+    }
+    .lesson-icon {
+      width: 42px; height: 42px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .lesson-info h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
+    .lesson-info p { font-size: 0.8rem; color: var(--text-muted); }
+    .lesson-meta {
+      margin-left: auto;
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .lesson-meta .duration {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* ============================================================
+       SECTION HEADERS
+    ============================================================ */
+    .section { padding: 48px 0; }
+    .section-header {
+      margin-bottom: 28px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .section-header h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .section-header p { color: var(--text-muted); font-size: 0.88rem; margin-top: 4px; }
+    .view-all {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: gap var(--transition);
+    }
+    .view-all:hover { gap: 8px; }
+
+    /* ============================================================
+       ANNOUNCEMENT BANNER
+    ============================================================ */
+    .announcement {
+      background: linear-gradient(135deg, var(--primary) 0%, #1e40af 100%);
+      color: white;
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .announcement-icon { font-size: 1.5rem; }
+    .announcement h4 { font-weight: 700; font-size: 0.95rem; }
+    .announcement p { font-size: 0.82rem; opacity: 0.85; margin-top: 2px; }
+
+    /* ============================================================
+       SEARCH BAR
+    ============================================================ */
+    .search-bar {
+      position: relative;
+      margin-bottom: 28px;
+    }
+    .search-bar input {
+      width: 100%;
+      padding: 12px 18px 12px 44px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.92rem;
+      font-family: var(--font-body);
+      transition: border-color var(--transition), box-shadow var(--transition);
+      outline: none;
+    }
+    .search-bar input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+    }
+    .search-bar input::placeholder { color: var(--text-muted); }
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    /* ============================================================
+       FILTER TABS
+    ============================================================ */
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    .filter-tab {
+      padding: 7px 16px;
+      border-radius: 99px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--text-muted);
+      font-size: 0.83rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .filter-tab:hover, .filter-tab.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    /* ============================================================
+       LESSON VIEWER (full-screen overlay)
+    ============================================================ */
+    .lesson-viewer {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 200;
+      overflow-y: auto;
+    }
+    .lesson-viewer.open { display: block; }
+    .viewer-navbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface2);
+      border: none;
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: background var(--transition);
+    }
+    .back-btn:hover { background: var(--border); }
+    .viewer-body { max-width: 860px; margin: 0 auto; padding: 32px 20px; }
+    .viewer-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    .viewer-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+    .viewer-meta .badge {
+      padding: 4px 12px;
+      border-radius: 99px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .content-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .content-block h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .content-block p, .content-block li {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+    .content-block ul { padding-left: 18px; }
+    .content-block li { margin-bottom: 6px; }
+
+    /* Video embed */
+    .video-wrap {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      background: #000;
+    }
+    .video-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .video-placeholder {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #1e3a8a, #1e40af);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      gap: 10px;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    .play-btn {
+      width: 56px; height: 56px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 1.5rem;
+      backdrop-filter: blur(4px);
+    }
+
+    /* ============================================================
+       PDF VIEWER
+    ============================================================ */
+    .pdf-viewer {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+    .pdf-toolbar {
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .pdf-toolbar button {
+      padding: 5px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.8rem;
+      font-weight: 500;
+      transition: all var(--transition);
+    }
+    .pdf-toolbar button:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .pdf-page-info { font-size: 0.82rem; color: var(--text-muted); }
+    .pdf-canvas-wrap {
+      background: #525659;
+      padding: 12px;
+      text-align: center;
+      min-height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    #pdf-canvas { max-width: 100%; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+    .pdf-loading {
+      color: white;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .spinner {
+      width: 20px; height: 20px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ============================================================
+       RESOURCE LIBRARY
+    ============================================================ */
+    .resource-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .resource-card:hover {
+      border-color: var(--primary);
+      transform: translateX(4px);
+    }
+    .resource-file-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+    .resource-info h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 3px; }
+    .resource-info p { font-size: 0.78rem; color: var(--text-muted); }
+    .resource-action {
+      margin-left: auto;
+      font-size: 0.8rem;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* ============================================================
+       ADMIN PANEL
+    ============================================================ */
+    .admin-grid {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 768px) { .admin-grid { grid-template-columns: 1fr; } }
+    .admin-sidebar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .admin-sidebar-header {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .admin-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 18px;
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: all var(--transition);
+      border-left: 3px solid transparent;
+    }
+    .admin-nav-item:hover, .admin-nav-item.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      border-left-color: var(--primary);
+    }
+    .admin-panel-content {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+    .form-group { margin-bottom: 18px; }
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.88rem;
+      font-family: var(--font-body);
+      outline: none;
+      transition: border-color var(--transition);
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+    }
+    .form-group textarea { resize: vertical; min-height: 90px; }
+    .upload-zone {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transition);
+      color: var(--text-muted);
+    }
+    .upload-zone:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+    .upload-zone .upload-icon { font-size: 2rem; margin-bottom: 10px; }
+    .upload-zone p { font-size: 0.88rem; }
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    .admin-table th {
+      text-align: left;
+      padding: 10px 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border);
+    }
+    .admin-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .admin-table tr:last-child td { border-bottom: none; }
+    .admin-table tr:hover td { background: var(--surface2); }
+    .action-btn {
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: none;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-right: 6px;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .action-edit { background: var(--amber-light); color: var(--amber); }
+    .action-edit:hover { background: var(--amber); color: white; }
+    .action-delete { background: var(--red-light); color: var(--red); }
+    .action-delete:hover { background: var(--red); color: white; }
+
+    /* ============================================================
+       STATS CARDS
+    ============================================================ */
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+    .stat-card .stat-num {
+      font-family: var(--font);
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .stat-card .stat-label { font-size: 0.82rem; color: var(--text-muted); }
+    .stat-card .stat-change {
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+    .stat-up { color: var(--green); }
+    .stat-down { color: var(--red); }
+
+    /* ============================================================
+       SUPPORT / DONATION
+    ============================================================ */
+    .support-banner {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      border-radius: var(--radius);
+      padding: 28px;
+      text-align: center;
+      margin: 40px 0;
+    }
+    .support-banner h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
+    .support-banner p { font-size: 0.9rem; opacity: 0.9; margin-bottom: 18px; }
+    .btn-support {
+      background: white;
+      color: var(--green);
+      padding: 10px 24px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .btn-support:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+
+    /* ============================================================
+       MODAL (Login / Signup)
+    ============================================================ */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(4px);
+      z-index: 300;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 32px;
+      width: 100%;
+      max-width: 420px;
+      animation: modalIn 0.25s ease;
+      position: relative;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .modal-close {
+      position: absolute;
+      top: 16px; right: 16px;
+      background: var(--surface2);
+      border: none;
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+    .modal-close:hover { background: var(--border); }
+    .modal h2 {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .modal p.sub { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 22px; }
+    .tab-switch {
+      display: flex;
+      background: var(--surface2);
+      border-radius: var(--radius-sm);
+      padding: 3px;
+      margin-bottom: 22px;
+    }
+    .tab-switch button {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      border-radius: 7px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: none;
+      color: var(--text-muted);
+      transition: all var(--transition);
+    }
+    .tab-switch button.active {
+      background: var(--surface);
+      color: var(--primary);
+      box-shadow: var(--shadow);
+    }
+    .form-hint {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 16px;
+    }
+    .form-hint a { color: var(--primary); cursor: pointer; }
+
+    /* ============================================================
+       TOAST NOTIFICATION
+    ============================================================ */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--text);
+      color: var(--bg);
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      z-index: 400;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transform: translateY(60px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      max-width: 300px;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { background: var(--green); }
+    .toast.error { background: var(--red); }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 32px 20px;
+      text-align: center;
+    }
+    footer .footer-logo {
+      font-family: var(--font);
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+    footer p { font-size: 0.82rem; color: var(--text-muted); }
+    footer .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 14px 0;
+      flex-wrap: wrap;
+    }
+    footer .footer-links a {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      transition: color var(--transition);
+    }
+    footer .footer-links a:hover { color: var(--primary); }
+
+    /* ============================================================
+       PROGRESS BAR
+    ============================================================ */
+    .progress-bar-wrap {
+      height: 6px;
+      background: var(--surface2);
+      border-radius: 99px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: var(--primary);
+    }
+
+    /* ============================================================
+       PAGE TRANSITIONS
+    ============================================================ */
+    .page.active {
+      animation: fadeIn 0.25s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+    /* ============================================================
+       BREADCRUMB
+    ============================================================ */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+    .breadcrumb span { cursor: pointer; transition: color var(--transition); }
+    .breadcrumb span:hover { color: var(--primary); }
+    .breadcrumb .sep { color: var(--border); }
+
+    /* Responsive tweaks */
+    @media (max-width: 480px) {
+      .hero { padding: 40px 20px 36px; }
+      .modal { padding: 24px 18px; }
+      .admin-panel-content { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     NAVBAR
+============================================================ -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <div class="logo" onclick="showPage('home')">
+      <div class="logo-icon">🧠</div>
+      Brain Sync 5
+    </div>
+    <ul class="nav-links">
+      <li><a href="#" onclick="showPage('home')" id="nav-home" class="active">Home</a></li>
+      <li><a href="#" onclick="showPage('subjects')" id="nav-subjects">Subjects</a></li>
+      <li><a href="#" onclick="showPage('resources')" id="nav-resources">Resources</a></li>
+      <li><a href="#" onclick="showPage('search')" id="nav-search">Search</a></li>
+      <li><a href="#" onclick="showPage('admin')" id="nav-admin">Admin</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="btn-icon" onclick="toggleDark()" title="Toggle dark mode" id="dark-toggle">🌙</button>
+      <button class="btn btn-primary" onclick="openModal()">Sign In</button>
+      <button class="hamburger" onclick="toggleMobile()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-nav" id="mobile-nav">
+    <a href="#" onclick="showPage('home');toggleMobile()">🏠 Home</a>
+    <a href="#" onclick="showPage('subjects');toggleMobile()">📚 Subjects</a>
+    <a href="#" onclick="showPage('resources');toggleMobile()">📁 Resources</a>
+    <a href="#" onclick="showPage('search');toggleMobile()">🔍 Search</a>
+    <a href="#" onclick="showPage('admin');toggleMobile()">⚙️ Admin</a>
+  </div>
+</nav>
+
+<!-- ============================================================
+     PAGE: HOME / DASHBOARD
+============================================================ -->
+<div class="page active" id="page-home">
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-badge">🇿🇲 Built for Zambia · Grade 10–12</div>
+    <h1>Learn <span>Smarter</span>,<br>Score Higher</h1>
+    <p>Free lessons, past papers, and study guides for Math, Physics, Chemistry, Biology, and English.</p>
+    <div class="hero-actions">
+      <button class="btn btn-primary btn-lg" onclick="showPage('subjects')">📚 Browse Subjects</button>
+      <button class="btn btn-outline btn-lg" onclick="showPage('resources')">📄 Past Papers</button>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">5</div><div class="label">Subjects</div></div>
+      <div class="hero-stat"><div class="num">40+</div><div class="label">Lessons</div></div>
+      <div class="hero-stat"><div class="num">20+</div><div class="label">Past Papers</div></div>
+      <div class="hero-stat"><div class="num">Free</div><div class="label">Always</div></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Announcement -->
+    <div class="section">
+      <div class="announcement">
+        <div class="announcement-icon">📢</div>
+        <div>
+          <h4>Exam Season Prep 2025!</h4>
+          <p>Grade 12 ECZ past papers for 2020–2024 are now available in the Resource Library.</p>
+        </div>
+      </div>
+
+      <!-- Quick subjects -->
+      <div class="section-header">
+        <div>
+          <h2>Continue Learning</h2>
+          <p>Pick up where you left off</p>
+        </div>
+        <div class="view-all" onclick="showPage('subjects')">View all →</div>
+      </div>
+      <div class="grid-auto" id="home-subjects"></div>
+    </div>
+
+    <!-- Recent lessons -->
+    <div class="section">
+      <div class="section-header">
+        <div>
+          <h2>Recent Lessons</h2>
+          <p>Newly added content</p>
+        </div>
+      </div>
+      <div id="home-lessons" style="display:flex;flex-direction:column;gap:10px;"></div>
+    </div>
+
+    <!-- Support -->
+    <div class="support-banner">
+      <h3>💚 Support Brain Sync 5</h3>
+      <p>This platform is free. If it helps you, consider supporting to keep it running and growing.</p>
+      <button class="btn-support" onclick="showToast('Thank you! 🙏 Payment integration coming soon.', 'success')">
+        ❤️ Support — K5 to K50
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE: SUBJECTS
+============================================================ -->
+<div class="page" id="page-subjects">
+  <div class="container">
+    <div class="section">
+      <div class="section-header">
+        <div>
+          <h2>All Subjects</h2>
+          <p>Choose a subject to see its topics and lessons</p>
+        </div>
+      </div>
+      <div class="grid-auto" id="subjects-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE: SUBJECT DETAIL (Topics & Lessons)
+============================================================ -->
+<div class="page" id="page-subject-detail">
+  <div class="container">
+    <div class="section">
+      <div class="breadcrumb">
+        <span onclick="showPage('subjects')">Subjects</span>
+        <span class="sep">›</span>
+        <span id="detail-subject-name">Mathematics</span>
+      </div>
+      <div id="subject-detail-header" style="margin-bottom:28px;"></div>
+      <!-- Topic filter tabs -->
+      <div class="filter-tabs" id="topic-tabs"></div>
+      <!-- Lessons list -->
+      <div id="lessons-list" style="display:flex;flex-direction:column;gap:10px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE: RESOURCES
+============================================================ -->
+<div class="page" id="page-resources">
+  <div class="container">
+    <div class="section">
+      <div class="section-header">
+        <div>
+          <h2>Resource Library</h2>
+          <p>Notes, past papers, and study guides</p>
+        </div>
+      </div>
+      <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="Search resources..." id="resource-search" oninput="filterResources()" />
+      </div>
+      <div class="filter-tabs" id="resource-filter-tabs"></div>
+      <div id="resources-grid" style="display:flex;flex-direction:column;gap:10px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE: SEARCH
+============================================================ -->
+<div class="page" id="page-search">
+  <div class="container">
+    <div class="section">
+      <div class="section-header">
+        <div>
+          <h2>Search Lessons</h2>
+          <p>Find any topic, lesson, or keyword</p>
+        </div>
+      </div>
+      <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="e.g. Algebra, Newton's Laws, Cells..." id="main-search" oninput="doSearch()" />
+      </div>
+      <div id="search-results" style="display:flex;flex-direction:column;gap:10px;"></div>
+      <div id="search-empty" style="text-align:center;padding:40px;color:var(--text-muted);display:none;">
+        <div style="font-size:2.5rem;margin-bottom:12px;">🔍</div>
+        <p>Type something to search lessons across all subjects.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE: ADMIN
+============================================================ -->
+<div class="page" id="page-admin">
+  <div class="container">
+    <div class="section">
+      <div class="section-header">
+        <div>
+          <h2>⚙️ Admin Panel</h2>
+          <p>Manage all content for Brain Sync 5</p>
+        </div>
+      </div>
+      <!-- Stats row -->
+      <div class="grid-3" style="margin-bottom:24px;" id="admin-stats"></div>
+
+      <div class="admin-grid">
+        <!-- Sidebar -->
+        <div class="admin-sidebar">
+          <div class="admin-sidebar-header">Manage</div>
+          <div class="admin-nav-item active" onclick="switchAdminTab('overview', this)">📊 Overview</div>
+          <div class="admin-nav-item" onclick="switchAdminTab('add-lesson', this)">➕ Add Lesson</div>
+          <div class="admin-nav-item" onclick="switchAdminTab('upload-pdf', this)">📄 Upload PDF</div>
+          <div class="admin-nav-item" onclick="switchAdminTab('manage-content', this)">🗂 Manage Content</div>
+          <div class="admin-nav-item" onclick="switchAdminTab('add-subject', this)">📚 Add Subject</div>
+        </div>
+
+        <!-- Content area -->
+        <div class="admin-panel-content" id="admin-content-area">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     LESSON VIEWER OVERLAY
+============================================================ -->
+<div class="lesson-viewer" id="lesson-viewer">
+  <div class="viewer-navbar">
+    <button class="back-btn" onclick="closeLessonViewer()">← Back</button>
+    <div id="viewer-breadcrumb" style="font-size:0.83rem;color:var(--text-muted);"></div>
+  </div>
+  <div class="viewer-body">
+    <div class="viewer-title" id="viewer-title"></div>
+    <div class="viewer-meta" id="viewer-meta"></div>
+
+    <!-- Description -->
+    <div class="content-block" id="viewer-desc-block">
+      <h3>📖 About This Lesson</h3>
+      <p id="viewer-desc"></p>
+    </div>
+
+    <!-- Key Points -->
+    <div class="content-block" id="viewer-points-block">
+      <h3>✅ Key Points</h3>
+      <ul id="viewer-points"></ul>
+    </div>
+
+    <!-- Video -->
+    <div class="content-block" id="viewer-video-block">
+      <h3>🎬 Video Lesson</h3>
+      <div class="video-wrap" id="viewer-video"></div>
+    </div>
+
+    <!-- PDF Viewer -->
+    <div class="content-block" id="viewer-pdf-block">
+      <h3>📄 PDF Notes</h3>
+      <div class="pdf-viewer">
+        <div class="pdf-toolbar">
+          <button onclick="pdfPrev()">◀ Prev</button>
+          <span class="pdf-page-info" id="pdf-page-info">Page 1 of 1</span>
+          <button onclick="pdfNext()">Next ▶</button>
+          <button onclick="pdfZoomIn()">🔍+</button>
+          <button onclick="pdfZoomOut()">🔍-</button>
+          <button onclick="pdfFit()">Fit</button>
+        </div>
+        <div class="pdf-canvas-wrap" id="pdf-canvas-wrap">
+          <div class="pdf-loading" id="pdf-loading">
+            <div class="spinner"></div>
+            Loading PDF...
+          </div>
+          <canvas id="pdf-canvas"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     AUTH MODAL
+============================================================ -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h2>Welcome Back 👋</h2>
+    <p class="sub">Sign in or create your Brain Sync 5 account</p>
+    <div class="tab-switch">
+      <button class="active" onclick="switchAuthTab('login', this)" id="tab-login">Sign In</button>
+      <button onclick="switchAuthTab('signup', this)" id="tab-signup">Sign Up</button>
+    </div>
+
+    <!-- Login form -->
+    <div id="auth-login">
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" placeholder="your@email.com" id="login-email" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" placeholder="Enter password" id="login-password" />
+      </div>
+      <div class="form-group">
+        <label>Role</label>
+        <select id="login-role">
+          <option value="student">Student</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" style="width:100%;padding:11px;" onclick="handleLogin()">Sign In</button>
+      <p class="form-hint">No account? <a onclick="switchAuthTab('signup',document.getElementById('tab-signup'))">Sign up free</a></p>
+    </div>
+
+    <!-- Signup form -->
+    <div id="auth-signup" style="display:none;">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" placeholder="Your name" id="signup-name" />
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" placeholder="your@email.com" id="signup-email" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" placeholder="Create a password" id="signup-password" />
+      </div>
+      <div class="form-group">
+        <label>Grade</label>
+        <select id="signup-grade">
+          <option>Grade 10</option>
+          <option>Grade 11</option>
+          <option selected>Grade 12</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" style="width:100%;padding:11px;" onclick="handleSignup()">Create Account</button>
+      <p class="form-hint">Already registered? <a onclick="switchAuthTab('login',document.getElementById('tab-login'))">Sign in</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- ============================================================
+     JAVASCRIPT — ALL APPLICATION LOGIC
+============================================================ -->
+<script>
+// ============================================================
+// DATA — This is your "database" for Phase 1 (static)
+// In Phase 2, this comes from your MongoDB backend API
+// ============================================================
+
+const SUBJECTS = [
+  {
+    id: 'math',
+    name: 'Mathematics',
+    icon: '📐',
+    color: '#2563eb',
+    bg: 'var(--primary-light)',
+    desc: 'Algebra, Calculus, Geometry, Statistics and more',
+    topics: ['Algebra', 'Geometry', 'Statistics', 'Trigonometry', 'Calculus'],
+    lessons: 8,
+    progress: 35
+  },
+  {
+    id: 'physics',
+    name: 'Physics',
+    icon: '⚛️',
+    color: '#7c3aed',
+    bg: 'var(--purple-light)',
+    desc: 'Mechanics, Waves, Electricity and Modern Physics',
+    topics: ["Mechanics", "Waves", "Electricity", "Thermodynamics"],
+    lessons: 9,
+    progress: 20
+  },
+  {
+    id: 'chemistry',
+    name: 'Chemistry',
+    icon: '🧪',
+    color: '#10b981',
+    bg: 'var(--green-light)',
+    desc: 'Organic, Inorganic, Physical Chemistry and reactions',
+    topics: ['Atomic Structure', 'Chemical Bonding', 'Organic Chemistry', 'Rates of Reaction'],
+    lessons: 7,
+    progress: 50
+  },
+  {
+    id: 'biology',
+    name: 'Biology',
+    icon: '🌿',
+    color: '#f59e0b',
+    bg: 'var(--amber-light)',
+    desc: 'Cell Biology, Genetics, Ecology and Human Physiology',
+    topics: ['Cell Biology', 'Genetics', 'Ecology', 'Physiology'],
+    lessons: 9,
+    progress: 60
+  },
+  {
+    id: 'english',
+    name: 'English',
+    icon: '📝',
+    color: '#ef4444',
+    bg: 'var(--red-light)',
+    desc: 'Comprehension, Essay Writing, Grammar and Literature',
+    topics: ['Comprehension', 'Essay Writing', 'Grammar', 'Literature'],
+    lessons: 7,
+    progress: 45
+  }
+];
+
+const LESSONS = [
+  // Mathematics
+  { id: 'l1', subject: 'math', topic: 'Algebra', title: 'Introduction to Algebra', duration: '15 min', desc: 'Learn the fundamentals of algebraic expressions, variables, and equations. We start from the very basics and build up step by step.', points: ['What is a variable?', 'Writing algebraic expressions', 'Simplifying expressions', 'Solving one-step equations'], video: 'https://www.youtube.com/embed/NybHckSEQBI', hasPdf: true },
+  { id: 'l2', subject: 'math', topic: 'Algebra', title: 'Quadratic Equations', duration: '20 min', desc: 'Understand and solve quadratic equations using factoring, completing the square, and the quadratic formula.', points: ['Standard form ax²+bx+c=0', 'Factoring method', 'Quadratic formula', 'Discriminant and nature of roots'], video: 'https://www.youtube.com/embed/i7idZfS8t8w', hasPdf: true },
+  { id: 'l3', subject: 'math', topic: 'Geometry', title: 'Circle Theorems', duration: '18 min', desc: 'Master all 8 circle theorems with clear diagrams and worked examples. Essential for ECZ Paper 2.', points: ['Angle in semicircle = 90°', 'Angles in same segment', 'Tangent-radius theorem', 'Alternate segment theorem'], video: null, hasPdf: true },
+  { id: 'l4', subject: 'math', topic: 'Statistics', title: 'Mean, Mode and Median', duration: '12 min', desc: 'Calculate and interpret measures of central tendency for grouped and ungrouped data.', points: ['Mean from frequency table', 'Modal class', 'Median from cumulative frequency', 'Comparing averages'], video: 'https://www.youtube.com/embed/B1HejMEEMDo', hasPdf: false },
+  { id: 'l5', subject: 'math', topic: 'Trigonometry', title: 'SOH-CAH-TOA & Sine Rule', duration: '22 min', desc: 'Master trigonometric ratios and apply the Sine and Cosine rules to non-right-angled triangles.', points: ['sin, cos, tan in right triangles', 'Sine rule: a/sinA = b/sinB', 'Cosine rule: a²=b²+c²-2bc cosA', 'Area = ½ab sinC'], video: 'https://www.youtube.com/embed/F21S9Wpi0y8', hasPdf: true },
+
+  // Physics
+  { id: 'l6', subject: 'physics', topic: 'Mechanics', title: "Newton's 3 Laws of Motion", duration: '20 min', desc: "Understand Newton's three laws of motion with real-world examples from Zambia and beyond.", points: ['1st Law: Inertia', '2nd Law: F = ma', '3rd Law: Action-Reaction', 'Free body diagrams'], video: 'https://www.youtube.com/embed/kKKM8Y-u7ds', hasPdf: true },
+  { id: 'l7', subject: 'physics', topic: 'Mechanics', title: 'Projectile Motion', duration: '18 min', desc: 'Analyse the motion of objects thrown horizontally or at an angle using kinematic equations.', points: ['Horizontal: constant velocity', 'Vertical: free fall (g = 10 m/s²)', 'Range and maximum height', 'Time of flight'], video: null, hasPdf: true },
+  { id: 'l8', subject: 'physics', topic: 'Waves', title: 'Wave Properties', duration: '16 min', desc: 'Learn about transverse and longitudinal waves, frequency, wavelength, amplitude and wave speed.', points: ['v = fλ', 'Transverse vs longitudinal', 'Amplitude and energy', 'Reflection & refraction'], video: 'https://www.youtube.com/embed/IXxZRZxafEQ', hasPdf: false },
+  { id: 'l9', subject: 'physics', topic: 'Electricity', title: "Ohm's Law & Circuits", duration: '25 min', desc: "Apply Ohm's Law to series and parallel circuits. Calculate resistance, current, and voltage.", points: ['V = IR', 'Series circuit rules', 'Parallel circuit rules', 'Power: P = IV = I²R'], video: 'https://www.youtube.com/embed/8gvJzrjwkds', hasPdf: true },
+
+  // Chemistry
+  { id: 'l10', subject: 'chemistry', topic: 'Atomic Structure', title: 'Atomic Structure & Periodic Table', duration: '20 min', desc: 'Understand protons, neutrons and electrons. Learn how to use the periodic table to find electronic configurations.', points: ['Atomic number vs mass number', 'Electronic configuration', 'Isotopes', 'Periods and groups'], video: 'https://www.youtube.com/embed/VKJn68JE5HM', hasPdf: true },
+  { id: 'l11', subject: 'chemistry', topic: 'Chemical Bonding', title: 'Ionic and Covalent Bonding', duration: '22 min', desc: 'Compare ionic and covalent bonds. Draw dot-and-cross diagrams and explain properties of compounds.', points: ['Ionic: metal + non-metal', 'Covalent: non-metal + non-metal', 'Dot-and-cross diagrams', 'Properties comparison'], video: null, hasPdf: true },
+  { id: 'l12', subject: 'chemistry', topic: 'Organic Chemistry', title: 'Alkanes, Alkenes & Alcohols', duration: '30 min', desc: 'Introduction to organic chemistry — naming, structure, and reactions of the main homologous series.', points: ['Naming carbon chains', 'Saturated vs unsaturated', 'Combustion reactions', 'Addition reactions in alkenes'], video: 'https://www.youtube.com/embed/qBBzKiMzeOQ', hasPdf: true },
+
+  // Biology
+  { id: 'l13', subject: 'biology', topic: 'Cell Biology', title: 'Cell Structure & Function', duration: '18 min', desc: 'Compare plant and animal cells. Identify organelles and their functions. Essential for Grade 10.', points: ['Cell membrane, nucleus, cytoplasm', 'Mitochondria = energy (ATP)', 'Chloroplasts in plant cells', 'Cell wall vs cell membrane'], video: 'https://www.youtube.com/embed/URUJD5NEXC8', hasPdf: true },
+  { id: 'l14', subject: 'biology', topic: 'Cell Biology', title: 'Osmosis and Diffusion', duration: '15 min', desc: 'Understand how substances move across membranes. Learn with practical examples and diagrams.', points: ['Diffusion: high to low concentration', 'Osmosis: water potential', 'Active transport: against gradient', 'Turgor pressure in plants'], video: 'https://www.youtube.com/embed/aubZU0iWtgI', hasPdf: false },
+  { id: 'l15', subject: 'biology', topic: 'Genetics', title: 'DNA, Genes and Inheritance', duration: '28 min', desc: 'Learn the structure of DNA and how genetic information is passed from parents to offspring.', points: ['DNA double helix structure', 'Chromosomes and genes', "Mendel's laws", 'Punnett squares and ratios'], video: null, hasPdf: true },
+  { id: 'l16', subject: 'biology', topic: 'Ecology', title: 'Food Chains and Ecosystems', duration: '16 min', desc: 'Understand energy flow through ecosystems, trophic levels, and the impact of human activity.', points: ['Producer → Consumer → Decomposer', 'Energy loss (10% rule)', 'Biotic vs abiotic factors', 'Human impact on ecosystems'], video: 'https://www.youtube.com/embed/v5EoSeHPFOk', hasPdf: false },
+
+  // English
+  { id: 'l17', subject: 'english', topic: 'Essay Writing', title: 'How to Write a Perfect Essay', duration: '20 min', desc: 'Master the 5-paragraph essay structure with introduction, body, and conclusion. ECZ exam techniques included.', points: ['Hook → Background → Thesis', 'Topic sentence for each paragraph', 'Evidence + Explanation + Link', 'Strong concluding statement'], video: 'https://www.youtube.com/embed/1J_2VHYYI2g', hasPdf: true },
+  { id: 'l18', subject: 'english', topic: 'Comprehension', title: 'Comprehension Techniques', duration: '16 min', desc: 'Learn how to answer comprehension questions efficiently in ECZ exams, including inference and vocabulary questions.', points: ['Skim for structure', 'Scan for answers', 'Inference questions strategy', 'Using your own words'], video: null, hasPdf: true },
+  { id: 'l19', subject: 'english', topic: 'Grammar', title: 'Tenses and Sentence Structure', duration: '18 min', desc: 'Revise all 12 English tenses with Zambian context examples. Common exam errors explained.', points: ['Simple, continuous, perfect tenses', 'Active vs passive voice', 'Complex sentences', 'Common errors to avoid'], video: 'https://www.youtube.com/embed/v2f3RcJoflI', hasPdf: false }
+];
+
+const RESOURCES = [
+  { id: 'r1', subject: 'math',      type: 'past-paper', title: 'ECZ Math Paper 1 – 2023', size: '1.2 MB', year: 2023 },
+  { id: 'r2', subject: 'math',      type: 'past-paper', title: 'ECZ Math Paper 2 – 2022', size: '0.9 MB', year: 2022 },
+  { id: 'r3', subject: 'math',      type: 'notes',      title: 'Algebra Cheat Sheet',     size: '0.4 MB' },
+  { id: 'r4', subject: 'physics',   type: 'past-paper', title: 'ECZ Physics Paper – 2023', size: '1.5 MB', year: 2023 },
+  { id: 'r5', subject: 'physics',   type: 'notes',      title: 'Physics Formula Sheet',   size: '0.3 MB' },
+  { id: 'r6', subject: 'chemistry', type: 'past-paper', title: 'ECZ Chemistry 2022',      size: '1.1 MB', year: 2022 },
+  { id: 'r7', subject: 'chemistry', type: 'notes',      title: 'Organic Chemistry Guide', size: '0.8 MB' },
+  { id: 'r8', subject: 'biology',   type: 'past-paper', title: 'ECZ Biology Paper – 2023', size: '1.3 MB', year: 2023 },
+  { id: 'r9', subject: 'biology',   type: 'notes',      title: 'Cell Biology Diagram Pack', size: '2.1 MB' },
+  { id: 'r10', subject: 'english',  type: 'past-paper', title: 'ECZ English 2023',         size: '0.7 MB', year: 2023 },
+  { id: 'r11', subject: 'english',  type: 'study-guide', title: 'Essay Writing Template', size: '0.2 MB' },
+  { id: 'r12', subject: 'math',     type: 'past-paper', title: 'ECZ Math Paper 1 – 2021', size: '1.0 MB', year: 2021 },
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let currentSubjectId = null;
+let currentTopicFilter = 'All';
+let currentResourceFilter = 'all';
+let pdfDoc = null;
+let pdfPageNum = 1;
+let pdfScale = 1.2;
+let isDark = false;
+let currentUser = null; // null = not logged in
+
+// ============================================================
+// PAGE NAVIGATION
+// ============================================================
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  // update nav active
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  const navLink = document.getElementById('nav-' + page);
+  if (navLink) navLink.classList.add('active');
+  window.scrollTo(0, 0);
+  // lazy init pages
+  if (page === 'subjects') renderSubjectsPage();
+  if (page === 'resources') renderResourcesPage();
+  if (page === 'search') initSearchPage();
+  if (page === 'admin') renderAdminPage();
+}
+
+// ============================================================
+// DARK MODE
+// ============================================================
+function toggleDark() {
+  isDark = !isDark;
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : '');
+  document.getElementById('dark-toggle').textContent = isDark ? '☀️' : '🌙';
+  // Save preference
+  localStorage.setItem('bs5-dark', isDark);
+}
+
+// ============================================================
+// MOBILE NAV
+// ============================================================
+function toggleMobile() {
+  document.getElementById('mobile-nav').classList.toggle('open');
+}
+
+// ============================================================
+// TOAST NOTIFICATION
+// ============================================================
+function showToast(msg, type = 'default') {
+  const t = document.getElementById('toast');
+  t.innerHTML = (type === 'success' ? '✅ ' : type === 'error' ? '❌ ' : 'ℹ️ ') + msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.className = 'toast', 3000);
+}
+
+// ============================================================
+// MODAL (AUTH)
+// ============================================================
+function openModal() { document.getElementById('modal').classList.add('open'); }
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+document.getElementById('modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal')) closeModal();
+});
+function switchAuthTab(tab, btn) {
+  document.getElementById('auth-login').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('auth-signup').style.display = tab === 'signup' ? 'block' : 'none';
+  document.querySelectorAll('.tab-switch button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+function handleLogin() {
+  const email = document.getElementById('login-email').value;
+  const role = document.getElementById('login-role').value;
+  if (!email) { showToast('Please enter your email', 'error'); return; }
+  // Simulate login (in Phase 2, this calls /api/auth/login)
+  currentUser = { email, role, name: email.split('@')[0] };
+  closeModal();
+  showToast('Welcome back! Signed in as ' + currentUser.name, 'success');
+  updateNavForUser();
+}
+function handleSignup() {
+  const name = document.getElementById('signup-name').value;
+  const email = document.getElementById('signup-email').value;
+  if (!name || !email) { showToast('Please fill in all fields', 'error'); return; }
+  // Simulate signup (in Phase 2, this calls /api/auth/register)
+  currentUser = { email, role: 'student', name };
+  closeModal();
+  showToast('Account created! Welcome, ' + name + ' 🎉', 'success');
+  updateNavForUser();
+}
+function updateNavForUser() {
+  if (currentUser) {
+    document.querySelector('.nav-actions .btn-primary').textContent = '👤 ' + currentUser.name;
+    document.querySelector('.nav-actions .btn-primary').onclick = () => {
+      showToast('Signed out', 'default');
+      currentUser = null;
+      document.querySelector('.nav-actions .btn-primary').textContent = 'Sign In';
+      document.querySelector('.nav-actions .btn-primary').onclick = openModal;
+    };
+  }
+}
+
+// ============================================================
+// RENDER SUBJECT CARD
+// ============================================================
+function subjectCardHTML(s, clickFn) {
+  return `
+    <div class="subject-card" onclick="${clickFn}('${s.id}')">
+      <div class="subject-header">
+        <div class="subject-icon" style="background:${s.bg};color:${s.color};">${s.icon}</div>
+        <h3>${s.name}</h3>
+        <p>${s.desc}</p>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" style="width:${s.progress}%;background:${s.color};"></div>
+        </div>
+        <p style="font-size:0.75rem;color:var(--text-muted);margin-top:5px;">${s.progress}% completed</p>
+      </div>
+      <div class="subject-footer">
+        <span>${s.lessons} lessons</span>
+        <span class="pill" style="background:${s.bg};color:${s.color};">${s.topics.length} topics</span>
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================
+// HOME PAGE
+// ============================================================
+function renderHomePage() {
+  // Subjects grid (first 4)
+  document.getElementById('home-subjects').innerHTML =
+    SUBJECTS.slice(0, 4).map(s => subjectCardHTML(s, 'openSubject')).join('');
+  // Recent lessons (last 5)
+  const recent = LESSONS.slice(-5).reverse();
+  document.getElementById('home-lessons').innerHTML = recent.map(l => lessonCardHTML(l)).join('');
+}
+
+function lessonCardHTML(l) {
+  const subj = SUBJECTS.find(s => s.id === l.subject);
+  return `
+    <div class="lesson-card" onclick="openLesson('${l.id}')">
+      <div class="lesson-icon" style="background:${subj.bg};color:${subj.color};">${subj.icon}</div>
+      <div class="lesson-info">
+        <h4>${l.title}</h4>
+        <p>${subj.name} · ${l.topic}</p>
+      </div>
+      <div class="lesson-meta">
+        <div class="duration">⏱ ${l.duration}</div>
+        ${l.hasPdf ? '<div style="font-size:0.75rem;color:var(--text-muted);margin-top:3px;">📄 PDF</div>' : ''}
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================
+// SUBJECTS PAGE
+// ============================================================
+function renderSubjectsPage() {
+  document.getElementById('subjects-grid').innerHTML =
+    SUBJECTS.map(s => subjectCardHTML(s, 'openSubject')).join('');
+}
+
+function openSubject(id) {
+  currentSubjectId = id;
+  currentTopicFilter = 'All';
+  const subj = SUBJECTS.find(s => s.id === id);
+  const lessons = LESSONS.filter(l => l.subject === id);
+
+  // Show subject detail page
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-subject-detail').classList.add('active');
+  document.getElementById('detail-subject-name').textContent = subj.name;
+
+  // Header
+  document.getElementById('subject-detail-header').innerHTML = `
+    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+      <div style="width:60px;height:60px;border-radius:14px;background:${subj.bg};color:${subj.color};display:grid;place-items:center;font-size:2rem;">${subj.icon}</div>
+      <div>
+        <h2 style="font-size:1.5rem;font-weight:800;">${subj.name}</h2>
+        <p style="color:var(--text-muted);font-size:0.88rem;">${subj.desc}</p>
+      </div>
+    </div>
+  `;
+
+  // Topic tabs
+  const topics = ['All', ...subj.topics];
+  document.getElementById('topic-tabs').innerHTML = topics.map(t =>
+    `<div class="filter-tab ${t === 'All' ? 'active' : ''}" onclick="filterByTopic('${t}', this)">${t}</div>`
+  ).join('');
+
+  renderLessons(id, 'All');
+  window.scrollTo(0, 0);
+}
+
+function filterByTopic(topic, el) {
+  currentTopicFilter = topic;
+  document.querySelectorAll('#topic-tabs .filter-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderLessons(currentSubjectId, topic);
+}
+
+function renderLessons(subjectId, topic) {
+  let lessons = LESSONS.filter(l => l.subject === subjectId);
+  if (topic !== 'All') lessons = lessons.filter(l => l.topic === topic);
+  if (lessons.length === 0) {
+    document.getElementById('lessons-list').innerHTML = `
+      <div style="text-align:center;padding:40px;color:var(--text-muted);">
+        No lessons yet for this topic. Check back soon!
+      </div>`;
+    return;
+  }
+  document.getElementById('lessons-list').innerHTML = lessons.map(l => lessonCardHTML(l)).join('');
+}
+
+// ============================================================
+// LESSON VIEWER
+// ============================================================
+function openLesson(id) {
+  const lesson = LESSONS.find(l => l.id === id);
+  const subj = SUBJECTS.find(s => s.id === lesson.subject);
+
+  // Save last viewed (bonus feature)
+  localStorage.setItem('bs5-last-lesson', id);
+
+  // Set content
+  document.getElementById('viewer-title').textContent = lesson.title;
+  document.getElementById('viewer-breadcrumb').textContent = subj.name + ' › ' + lesson.topic;
+  document.getElementById('viewer-meta').innerHTML = `
+    <span class="badge" style="background:${subj.bg};color:${subj.color};">${subj.icon} ${subj.name}</span>
+    <span class="badge" style="background:var(--surface2);color:var(--text-muted);">📚 ${lesson.topic}</span>
+    <span class="badge" style="background:var(--surface2);color:var(--text-muted);">⏱ ${lesson.duration}</span>
+  `;
+  document.getElementById('viewer-desc').textContent = lesson.desc;
+
+  // Key points
+  if (lesson.points && lesson.points.length) {
+    document.getElementById('viewer-points').innerHTML = lesson.points.map(p => `<li>${p}</li>`).join('');
+    document.getElementById('viewer-points-block').style.display = 'block';
+  } else {
+    document.getElementById('viewer-points-block').style.display = 'none';
+  }
+
+  // Video
+  const vb = document.getElementById('viewer-video-block');
+  if (lesson.video) {
+    document.getElementById('viewer-video').innerHTML = `
+      <iframe src="${lesson.video}" title="${lesson.title}" allowfullscreen loading="lazy"></iframe>
+    `;
+    vb.style.display = 'block';
+  } else {
+    vb.style.display = 'none';
+  }
+
+  // PDF
+  const pb = document.getElementById('viewer-pdf-block');
+  if (lesson.hasPdf) {
+    pb.style.display = 'block';
+    initDemoPDF(); // In Phase 2, load the real PDF URL
+  } else {
+    pb.style.display = 'none';
+  }
+
+  document.getElementById('lesson-viewer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLessonViewer() {
+  document.getElementById('lesson-viewer').classList.remove('open');
+  document.body.style.overflow = '';
+  // Stop video to save data
+  document.getElementById('viewer-video').innerHTML = '';
+  // Unload PDF
+  pdfDoc = null;
+}
+
+// ============================================================
+// PDF VIEWER (using PDF.js)
+// ============================================================
+// Set the worker path for PDF.js
+if (typeof pdfjsLib !== 'undefined') {
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+}
+
+function initDemoPDF() {
+  // In production, this would load a real PDF URL from your server
+  // For the demo, we generate a sample canvas to show the PDF viewer is working
+  document.getElementById('pdf-loading').style.display = 'flex';
+  document.getElementById('pdf-canvas').style.display = 'none';
+
+  // Simulate loading delay then show demo canvas
+  setTimeout(() => {
+    document.getElementById('pdf-loading').style.display = 'none';
+    renderDemoPDFPage();
+  }, 800);
+}
+
+function renderDemoPDFPage() {
+  const canvas = document.getElementById('pdf-canvas');
+  const ctx = canvas.getContext('2d');
+  const W = Math.min(600, window.innerWidth - 60);
+  canvas.width = W;
+  canvas.height = W * 1.414;
+  canvas.style.display = 'block';
+
+  // Draw a sample "PDF page"
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, W, canvas.height);
+
+  // Header bar
+  ctx.fillStyle = '#2563eb';
+  ctx.fillRect(0, 0, W, 50);
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 18px Sora, sans-serif';
+  ctx.fillText('Brain Sync 5 — PDF Notes', 20, 32);
+
+  // Title
+  ctx.fillStyle = '#0f1a3e';
+  ctx.font = 'bold 20px Sora, sans-serif';
+  ctx.fillText('Lesson Notes', 30, 90);
+  ctx.font = '14px DM Sans, sans-serif';
+  ctx.fillStyle = '#6b7a9e';
+  ctx.fillText('Grade 10–12 · Brain Sync 5 Educational Platform', 30, 112);
+
+  // Divider
+  ctx.strokeStyle = '#dde3f4';
+  ctx.beginPath(); ctx.moveTo(30, 125); ctx.lineTo(W - 30, 125); ctx.stroke();
+
+  // Sample content lines
+  const lines = [
+    '1. Introduction',
+    '   This lesson covers fundamental concepts that you will need',
+    '   for your ECZ examinations. Read carefully.',
+    '',
+    '2. Key Definitions',
+    '   • Concept A: The relationship between two quantities...',
+    '   • Concept B: A process whereby matter is transformed...',
+    '   • Concept C: The rate of change with respect to time...',
+    '',
+    '3. Important Formula',
+    '   v = u + at',
+    '   s = ut + ½at²',
+    '   v² = u² + 2as',
+    '',
+    '4. Worked Example',
+    '   A car accelerates from rest at 3 m/s² for 5 seconds.',
+    '   Find: (a) final velocity  (b) distance travelled',
+    '',
+    '   Solution:',
+    '   (a) v = u + at = 0 + 3 × 5 = 15 m/s',
+    '   (b) s = ut + ½at² = 0 + ½ × 3 × 25 = 37.5 m',
+  ];
+  ctx.font = '13px DM Sans, sans-serif';
+  ctx.fillStyle = '#0f1a3e';
+  let y = 150;
+  lines.forEach(line => {
+    if (line.startsWith('   •') || line.startsWith('   ')) {
+      ctx.fillStyle = '#6b7a9e';
+    } else if (line.match(/^\d/)) {
+      ctx.fillStyle = '#2563eb';
+      ctx.font = 'bold 14px Sora, sans-serif';
+    } else if (line === '') {
+      y += 8; return;
+    } else {
+      ctx.fillStyle = '#0f1a3e';
+      ctx.font = '13px DM Sans, sans-serif';
+    }
+    ctx.fillText(line, 30, y);
+    y += 22;
+  });
+
+  // Footer
+  ctx.fillStyle = '#f5f7ff';
+  ctx.fillRect(0, canvas.height - 36, W, 36);
+  ctx.fillStyle = '#6b7a9e';
+  ctx.font = '11px DM Sans, sans-serif';
+  ctx.fillText('Brain Sync 5 — brainsync5.com · Page 1 of 4', 30, canvas.height - 15);
+
+  document.getElementById('pdf-page-info').textContent = 'Page 1 of 4 (demo)';
+}
+
+function pdfPrev() { showToast('Upload a real PDF to enable navigation', 'default'); }
+function pdfNext() { showToast('Upload a real PDF to enable navigation', 'default'); }
+function pdfZoomIn() {
+  pdfScale = Math.min(pdfScale + 0.2, 3);
+  const c = document.getElementById('pdf-canvas');
+  c.style.transform = `scale(${pdfScale})`;
+  c.style.transformOrigin = 'top center';
+}
+function pdfZoomOut() {
+  pdfScale = Math.max(pdfScale - 0.2, 0.5);
+  const c = document.getElementById('pdf-canvas');
+  c.style.transform = `scale(${pdfScale})`;
+  c.style.transformOrigin = 'top center';
+}
+function pdfFit() {
+  pdfScale = 1;
+  const c = document.getElementById('pdf-canvas');
+  c.style.transform = 'scale(1)';
+}
+
+// ============================================================
+// RESOURCES PAGE
+// ============================================================
+const RESOURCE_TYPES = { 'notes': '📝 Notes', 'past-paper': '📋 Past Papers', 'study-guide': '📖 Study Guides' };
+const RESOURCE_ICONS = { 'notes': '📝', 'past-paper': '📋', 'study-guide': '📖' };
+const RESOURCE_COLORS = {
+  'notes': { bg: 'var(--primary-light)', color: 'var(--primary)' },
+  'past-paper': { bg: 'var(--purple-light)', color: 'var(--purple)' },
+  'study-guide': { bg: 'var(--green-light)', color: 'var(--green)' }
+};
+
+function renderResourcesPage() {
+  // Build subject filter tabs
+  const tabs = [
+    { id: 'all', label: 'All' },
+    ...SUBJECTS.map(s => ({ id: s.id, label: s.icon + ' ' + s.name }))
+  ];
+  document.getElementById('resource-filter-tabs').innerHTML = tabs.map(t =>
+    `<div class="filter-tab ${t.id === currentResourceFilter ? 'active' : ''}" onclick="setResourceFilter('${t.id}', this)">${t.label}</div>`
+  ).join('');
+  displayResources();
+}
+
+function setResourceFilter(id, el) {
+  currentResourceFilter = id;
+  document.querySelectorAll('#resource-filter-tabs .filter-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  displayResources();
+}
+
+function filterResources() {
+  displayResources();
+}
+
+function displayResources() {
+  const search = (document.getElementById('resource-search') || {}).value || '';
+  let list = RESOURCES;
+  if (currentResourceFilter !== 'all') list = list.filter(r => r.subject === currentResourceFilter);
+  if (search) list = list.filter(r => r.title.toLowerCase().includes(search.toLowerCase()));
+
+  document.getElementById('resources-grid').innerHTML = list.map(r => {
+    const subj = SUBJECTS.find(s => s.id === r.subject);
+    const c = RESOURCE_COLORS[r.type] || { bg: 'var(--surface2)', color: 'var(--text-muted)' };
+    return `
+      <div class="resource-card" onclick="openResourcePDF('${r.id}')">
+        <div class="resource-file-icon" style="background:${c.bg};color:${c.color};">${RESOURCE_ICONS[r.type] || '📄'}</div>
+        <div class="resource-info">
+          <h4>${r.title}</h4>
+          <p>${subj.name} · ${RESOURCE_TYPES[r.type] || 'Document'} · ${r.size}</p>
+        </div>
+        <div class="resource-action">View →</div>
+      </div>
+    `;
+  }).join('');
+
+  if (list.length === 0) {
+    document.getElementById('resources-grid').innerHTML = `
+      <div style="text-align:center;padding:40px;color:var(--text-muted);">No resources found.</div>`;
+  }
+}
+
+function openResourcePDF(id) {
+  const r = RESOURCES.find(res => res.id === id);
+  showToast('Opening: ' + r.title + ' (connect your backend to serve real PDFs)', 'default');
+}
+
+// ============================================================
+// SEARCH PAGE
+// ============================================================
+function initSearchPage() {
+  document.getElementById('search-empty').style.display = 'block';
+  document.getElementById('search-results').innerHTML = '';
+}
+
+function doSearch() {
+  const q = document.getElementById('main-search').value.toLowerCase().trim();
+  if (!q) { initSearchPage(); return; }
+  document.getElementById('search-empty').style.display = 'none';
+
+  const results = LESSONS.filter(l =>
+    l.title.toLowerCase().includes(q) ||
+    l.topic.toLowerCase().includes(q) ||
+    l.subject.toLowerCase().includes(q) ||
+    (l.desc && l.desc.toLowerCase().includes(q)) ||
+    (l.points && l.points.some(p => p.toLowerCase().includes(q)))
+  );
+
+  if (results.length === 0) {
+    document.getElementById('search-results').innerHTML = `
+      <div style="text-align:center;padding:40px;color:var(--text-muted);">
+        <div style="font-size:2rem;margin-bottom:10px;">🤔</div>
+        <p>No lessons found for "<strong>${q}</strong>"</p>
+        <p style="margin-top:6px;font-size:0.82rem;">Try different keywords like "algebra", "cells", "Newton"</p>
+      </div>`;
+  } else {
+    document.getElementById('search-results').innerHTML = `
+      <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:12px;">${results.length} lesson${results.length > 1 ? 's' : ''} found</p>
+      ${results.map(l => lessonCardHTML(l)).join('')}
+    `;
+  }
+}
+
+// ============================================================
+// ADMIN PAGE
+// ============================================================
+let currentAdminTab = 'overview';
+
+function renderAdminPage() {
+  // Stats
+  document.getElementById('admin-stats').innerHTML = [
+    { num: SUBJECTS.length, label: 'Subjects', icon: '📚', color: 'var(--primary)', change: '' },
+    { num: LESSONS.length, label: 'Lessons', icon: '📖', color: 'var(--green)', change: '+3 this week' },
+    { num: RESOURCES.length, label: 'Resources', icon: '📄', color: 'var(--purple)', change: '' },
+  ].map(s => `
+    <div class="stat-card">
+      <div style="font-size:1.5rem;margin-bottom:8px;">${s.icon}</div>
+      <div class="stat-num" style="color:${s.color};">${s.num}</div>
+      <div class="stat-label">${s.label}</div>
+      ${s.change ? `<div class="stat-change stat-up">↑ ${s.change}</div>` : ''}
+    </div>
+  `).join('');
+
+  switchAdminTab(currentAdminTab, document.querySelector('.admin-nav-item.active'));
+}
+
+function switchAdminTab(tab, el) {
+  currentAdminTab = tab;
+  document.querySelectorAll('.admin-nav-item').forEach(i => i.classList.remove('active'));
+  if (el) el.classList.add('active');
+  const area = document.getElementById('admin-content-area');
+
+  if (tab === 'overview') {
+    area.innerHTML = `
+      <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:18px;">📊 Content Overview</h3>
+      <table class="admin-table">
+        <thead><tr><th>Subject</th><th>Topics</th><th>Lessons</th><th>Actions</th></tr></thead>
+        <tbody>
+          ${SUBJECTS.map(s => `
+            <tr>
+              <td>${s.icon} ${s.name}</td>
+              <td>${s.topics.length}</td>
+              <td>${LESSONS.filter(l => l.subject === s.id).length}</td>
+              <td>
+                <button class="action-btn action-edit" onclick="showToast('Edit ${s.name} — backend needed','default')">Edit</button>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+  } else if (tab === 'add-lesson') {
+    area.innerHTML = `
+      <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:18px;">➕ Add New Lesson</h3>
+      <div class="form-group">
+        <label>Lesson Title *</label>
+        <input type="text" placeholder="e.g. Introduction to Quadratic Equations" id="al-title" />
+      </div>
+      <div class="form-group">
+        <label>Subject *</label>
+        <select id="al-subject">
+          ${SUBJECTS.map(s => `<option value="${s.id}">${s.name}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Topic *</label>
+        <input type="text" placeholder="e.g. Algebra" id="al-topic" />
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea placeholder="Brief description of what students will learn..." id="al-desc"></textarea>
+      </div>
+      <div class="form-group">
+        <label>YouTube Video URL (optional)</label>
+        <input type="text" placeholder="https://www.youtube.com/watch?v=..." id="al-video" />
+      </div>
+      <div class="form-group">
+        <label>Duration</label>
+        <input type="text" placeholder="e.g. 20 min" id="al-duration" value="15 min" />
+      </div>
+      <button class="btn btn-primary" onclick="submitLesson()">✅ Add Lesson</button>
+      <p style="font-size:0.8rem;color:var(--text-muted);margin-top:12px;">⚠️ In Phase 2, this saves to your MongoDB database via POST /api/lessons</p>
+    `;
+  } else if (tab === 'upload-pdf') {
+    area.innerHTML = `
+      <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:18px;">📄 Upload PDF Resource</h3>
+      <div class="form-group">
+        <label>Resource Title *</label>
+        <input type="text" placeholder="e.g. ECZ Mathematics Paper 1 – 2024" />
+      </div>
+      <div class="form-group">
+        <label>Subject</label>
+        <select>${SUBJECTS.map(s => `<option value="${s.id}">${s.name}</option>`).join('')}</select>
+      </div>
+      <div class="form-group">
+        <label>Resource Type</label>
+        <select>
+          <option value="past-paper">Past Exam Paper</option>
+          <option value="notes">Notes / Cheat Sheet</option>
+          <option value="study-guide">Study Guide</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Upload PDF File</label>
+        <div class="upload-zone" onclick="showToast('File upload requires backend (Multer) — Phase 2','default')">
+          <div class="upload-icon">☁️</div>
+          <p><strong>Click to upload</strong> or drag and drop</p>
+          <p style="font-size:0.78rem;margin-top:4px;">PDF files only · Max 10 MB</p>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="showToast('PDF upload requires backend integration — Phase 2','default')">📤 Upload PDF</button>
+      <p style="font-size:0.8rem;color:var(--text-muted);margin-top:12px;">⚠️ In Phase 2, files upload to your server via POST /api/upload (Multer middleware)</p>
+    `;
+  } else if (tab === 'manage-content') {
+    area.innerHTML = `
+      <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:18px;">🗂 Manage Lessons</h3>
+      <table class="admin-table">
+        <thead><tr><th>Lesson</th><th>Subject</th><th>Topic</th><th>Actions</th></tr></thead>
+        <tbody>
+          ${LESSONS.map(l => {
+            const s = SUBJECTS.find(s => s.id === l.subject);
+            return `
+              <tr>
+                <td>${l.title}</td>
+                <td>${s.icon} ${s.name}</td>
+                <td>${l.topic}</td>
+                <td>
+                  <button class="action-btn action-edit" onclick="showToast('Edit: ${l.title} — backend needed','default')">Edit</button>
+                  <button class="action-btn action-delete" onclick="showToast('Delete: ${l.title} — backend needed','error')">Delete</button>
+                </td>
+              </tr>
+            `;
+          }).join('')}
+        </tbody>
+      </table>
+    `;
+  } else if (tab === 'add-subject') {
+    area.innerHTML = `
+      <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:18px;">📚 Add New Subject</h3>
+      <div class="form-group">
+        <label>Subject Name *</label>
+        <input type="text" placeholder="e.g. Computer Science" />
+      </div>
+      <div class="form-group">
+        <label>Icon (emoji)</label>
+        <input type="text" placeholder="e.g. 💻" maxlength="2" />
+      </div>
+      <div class="form-group">
+        <label>Short Description</label>
+        <input type="text" placeholder="e.g. Programming, Databases, Networks" />
+      </div>
+      <div class="form-group">
+        <label>Accent Color</label>
+        <input type="color" value="#2563eb" />
+      </div>
+      <button class="btn btn-primary" onclick="showToast('Subject saved! (connects to MongoDB in Phase 2)','success')">➕ Add Subject</button>
+    `;
+  }
+}
+
+function submitLesson() {
+  const title = document.getElementById('al-title').value;
+  if (!title) { showToast('Please enter a lesson title', 'error'); return; }
+  // In Phase 2: POST to /api/lessons
+  showToast('Lesson "' + title + '" added! (Phase 2 saves to MongoDB)', 'success');
+}
+
+// ============================================================
+// FOOTER
+// ============================================================
+document.write(`
+  <footer>
+    <div class="footer-logo">🧠 Brain Sync 5</div>
+    <div class="footer-links">
+      <a href="#" onclick="showPage('home')">Home</a>
+      <a href="#" onclick="showPage('subjects')">Subjects</a>
+      <a href="#" onclick="showPage('resources')">Resources</a>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+    </div>
+    <p>Built for Zambia 🇿🇲 · Grade 10–12 · Free Education for All</p>
+    <p style="margin-top:6px;">© 2025 Brain Sync 5. Made with ❤️ to help students succeed.</p>
+  </footer>
+`);
+
+// ============================================================
+// INIT — Run on page load
+// ============================================================
+(function init() {
+  // Restore dark mode preference
+  if (localStorage.getItem('bs5-dark') === 'true') toggleDark();
+  // Render home page content
+  renderHomePage();
+  // Show search empty state
+  document.getElementById('search-empty').style.display = 'block';
+  // Render admin page initial state
+  document.getElementById('admin-content-area').innerHTML = '<p style="color:var(--text-muted);">Select a tab to manage content.</p>';
+  // Keyboard shortcut: Escape closes lesson viewer
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      if (document.getElementById('lesson-viewer').classList.contains('open')) closeLessonViewer();
+      if (document.getElementById('modal').classList.contains('open')) closeModal();
+    }
+  });
+})();
+</script>
+</body>
+</html>
